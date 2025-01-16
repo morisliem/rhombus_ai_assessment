@@ -1,5 +1,3 @@
-/* pattern-matching.sass */
-
 .pattern-matching-container
     text-align: center
 
@@ -15,7 +13,6 @@
         padding: 8px
         text-align: left
 
-/* Hide the default file input */
 input[type="file"]
     display: none
 
@@ -39,20 +36,10 @@ h1
     display: flex
     flex-direction: column
     align-items: center
-    gap: 10px // Reduced spacing between "Your input data" and the table
+    gap: 20px
 
     p
-        margin-bottom: 0 // Remove bottom margin of the "Your input data" text
-
-    .table
-        border-collapse: collapse
-        margin: 0 auto
-
-        th,
-        td
-            border: 1px solid black
-            padding: 8px
-            text-align: left
+        margin-bottom: 10px
 
 .textarea-container
     display: flex
@@ -68,3 +55,22 @@ h1
         border: 1px solid #ccc
         border-radius: 4px
         resize: none
+
+.tables-container
+    display: flex
+    justify-content: space-between
+    gap: 20px
+    width: 100%
+    max-width: 1200px
+    margin: 0 auto
+
+.table-wrapper
+    flex: 1
+    text-align: center
+
+    p
+        margin-bottom: 10px
+        font-weight: bold
+
+    .table
+        margin: 0 auto

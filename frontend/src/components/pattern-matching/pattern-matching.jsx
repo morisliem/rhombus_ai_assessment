@@ -3,9 +3,9 @@ import * as XLSX from "xlsx";
 import "./pattern-matching.sass";
 
 const PatternMatching = () => {
-    const [array, setArray] = useState([])
-    const [updatedArray, setUpdatedArray] = useState([])
-    const [userPrompt, setUserPrompt] = useState([])
+    const [array, setArray] = useState([]);
+    const [updatedArray, setUpdatedArray] = useState([]);
+    const [userPrompt, setUserPrompt] = useState("");
 
     const processFile = (file) => {
         const reader = new FileReader();
@@ -52,26 +52,29 @@ const PatternMatching = () => {
     };
 
     const handleUserPrompt = (e) => {
-        setUserPrompt(e.target.value)
-    }
+        setUserPrompt(e.target.value);
+    };
 
     const handleOnChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setUpdatedArray([])
+            setUpdatedArray([]);
             processFile(file);
         }
     };
 
     const findMatchingPattern = (e) => {
-        e.preventDefault()
-        // Do API CALL HERE
+        e.preventDefault();
+        // Simulate API call or pattern matching logic
+        const updated = array.map((item) => ({
+            ...item
+        }));
+        setUpdatedArray(updated);
+    };
 
-        setUpdatedArray(array)
-    }
-
-    const headerKeys = array.length > 0 ? Object.keys(array[0]) : []
-    const updatedTable = updatedArray.length > 0 ? Object.keys(array[0]) : []
+    const headerKeys = array.length > 0 ? Object.keys(array[0]) : [];
+    const updatedHeaderKeys =
+        updatedArray.length > 0 ? Object.keys(updatedArray[0]) : [];
 
     return (
         <div className="pattern-matching-container">
@@ -92,62 +95,69 @@ const PatternMatching = () => {
             </div>
 
             {array.length > 0 && (
-                <div className="result-container">
+                <>
                     <div className="textarea-container">
                         <textarea
-                            type="search"
+                            type="text"
                             placeholder="Please describe pattern you want to find"
-                            onChange={(e) => handleUserPrompt(e)}
+                            onChange={handleUserPrompt}
                         ></textarea>
-                        <button onClick={(e) => { findMatchingPattern(e) }}>Find</button>
+                        <button onClick={findMatchingPattern}>Find</button>
                     </div>
-                    <p>Your input data</p>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                {headerKeys.map((key) => (
-                                    <th key={key}>{key}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {array.map((item, index) => (
-                                <tr key={index}>
-                                    {Object.values(item).map((val, i) => (
-                                        <td key={i}>{val}</td>
+
+                    <div className="tables-container">
+                        <div className="table-wrapper">
+                            <p>Your input data</p>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        {headerKeys.map((key) => (
+                                            <th key={key}>{key}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {array.map((item, index) => (
+                                        <tr key={index}>
+                                            {Object.values(item).map(
+                                                (val, i) => (
+                                                    <td key={i}>{val}</td>
+                                                )
+                                            )}
+                                        </tr>
                                     ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {updatedArray.length > 0 && (
+                            <div className="table-wrapper">
+                                <p>Your updated data</p>
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            {updatedHeaderKeys.map((key) => (
+                                                <th key={key}>{key}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {updatedArray.map((item, index) => (
+                                            <tr key={index}>
+                                                {Object.values(item).map(
+                                                    (val, i) => (
+                                                        <td key={i}>{val}</td>
+                                                    )
+                                                )}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                </>
             )}
-
-
-            {updatedTable.length > 0 && (
-                <div className="result-container">
-                    <p>Your updated data</p>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                {headerKeys.map((key) => (
-                                    <th key={key}>{key}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {array.map((item, index) => (
-                                <tr key={index}>
-                                    {Object.values(item).map((val, i) => (
-                                        <td key={i}>{val}</td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-
         </div>
     );
 };
