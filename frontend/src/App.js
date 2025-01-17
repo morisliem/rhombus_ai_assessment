@@ -1,7 +1,7 @@
 import NoPage from './components/no-page/no-page';
 import HomePage from './components/home-page/home-page';
 import PatternMatchingPage from './components/pattern-matching/pattern-matching';
-import { BrowserRouter as Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 function App() {
   return (

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import axios from "axios";
 import "./pattern-matching.sass";
 
 const PatternMatching = () => {
     const [array, setArray] = useState([]);
-    const [updatedArray, setUpdatedArray] = useState([]);
+    const [updatedTable, setUpdatedTable] = useState([]);
     const [userPrompt, setUserPrompt] = useState("");
+    const [file, setFile] = useState(null);
 
     const processFile = (file) => {
         const reader = new FileReader();
@@ -22,6 +24,7 @@ const PatternMatching = () => {
             file.type === "application/vnd.ms-excel"
         ) {
             reader.onload = function (event) {
+                // Reference: https://www.geeksforgeeks.org/npm-xlsx/
                 const data = new Uint8Array(event.target.result);
                 const workbook = XLSX.read(data, { type: "array" });
                 const sheetName = workbook.SheetNames[0];
@@ -56,25 +59,52 @@ const PatternMatching = () => {
     };
 
     const handleOnChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setUpdatedArray([]);
-            processFile(file);
+        const uploadedFile = e.target.files[0];
+        if (uploadedFile) {
+            setFile(uploadedFile)
+            processFile(uploadedFile);
         }
     };
 
-    const findMatchingPattern = (e) => {
-        e.preventDefault();
-        // Simulate API call or pattern matching logic
-        const updated = array.map((item) => ({
-            ...item
-        }));
-        setUpdatedArray(updated);
-    };
+    const findMatchingPattern = async (e) => {
+        e.preventDefault()
+
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("user_prompt", userPrompt)
+
+        try {
+            const response = await axios.post(
+                "http://localhost:8000/api/pattern-matching",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                }
+            )
+            if (response.data.response_type === "success" && response.data.data) {
+                const data = response.data.data
+                const updatedData = Object.keys(data[Object.keys(data)[0]]).map((_, index) => {
+                    const row = {}
+                    Object.keys(data).forEach((key) => {
+                        row[key] = data[key][index]
+                    })
+                    return row
+                })
+                setUpdatedTable(updatedData)
+            } else {
+                console.log("invalid response from the server: ", response)
+            }
+
+        } catch (err) {
+            console.error("Error uploading file: ", err)
+        }
+    }
 
     const headerKeys = array.length > 0 ? Object.keys(array[0]) : [];
     const updatedHeaderKeys =
-        updatedArray.length > 0 ? Object.keys(updatedArray[0]) : [];
+        updatedTable.length > 0 ? Object.keys(updatedTable[0]) : [];
 
     return (
         <div className="pattern-matching-container">
@@ -130,7 +160,7 @@ const PatternMatching = () => {
                             </table>
                         </div>
 
-                        {updatedArray.length > 0 && (
+                        {updatedTable.length > 0 && (
                             <div className="table-wrapper">
                                 <p>Your updated data</p>
                                 <table className="table">
@@ -142,7 +172,7 @@ const PatternMatching = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {updatedArray.map((item, index) => (
+                                        {updatedTable.map((item, index) => (
                                             <tr key={index}>
                                                 {Object.values(item).map(
                                                     (val, i) => (
