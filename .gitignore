@@ -6,6 +6,10 @@ frontend/coverage
 frontend/build
 
 backend/.env
+backend/venv
+backend/backend/__pycache__
+backend/rhombus_ai/__pycache__
+backend/rhombus_ai/migrations/__pycache__
 
 .DS_Store
 .env.local
