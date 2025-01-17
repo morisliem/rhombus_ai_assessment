@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import FileUploadAPI
+from .views import PatternMatchingAPI
 
 urlpatterns = [
-    path('upload/', FileUploadAPI.as_view(), name='file-upload'),
+    path('pattern-matching/', PatternMatchingAPI.as_view(), name='pattern-matching'),
 ]
