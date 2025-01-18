@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+class TemporaryData(models.Model):
+    file_name = models.CharField(max_length=255)  
+    data_blob = models.BinaryField()  
+    uploaded_at = models.DateTimeField(auto_now_add=True) 
