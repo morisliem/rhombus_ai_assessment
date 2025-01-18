@@ -5,10 +5,12 @@ from rest_framework import status
 from django.core.paginator import Paginator
 from .controller import *
 from .custome_response import *
+from .open_ai_api import *
 import pandas as pd
 import logging
 import pickle
 from .models import TemporaryData
+import json
 
 logger = logging.getLogger("rhombus_ai")
 
@@ -90,22 +92,33 @@ class UploadFileAPI(APIView):
 
 
 class PatternMatchingAPI(APIView):
-    parser_classes = (MultiPartParser, FormParser)
+    def get(self, request, *args, **kwargs):
+        logger.info(f"Incoming request to PatternMatchingAPI: {request}")
+        try:
+            page = request.query_params.get('page', 1)
+            page_size = request.query_params.get('page_size', 15)
+            request_body = json.loads(request.body)
+            
+            user_prompt = request_body.get('user_prompt')
+            temp_data = TemporaryData.objects.last()
+            df = pickle.loads(temp_data.data_blob)
+            data = df.to_dict(orient='records')
 
-    def post(self, request, *args, **kwargs):
-        file_obj = request.FILES.get('file', None)
-        user_prompt = request.data.get('user_prompt', None)
-        logger.info(f"Incoming request to PatternMatchingAPI: {file_obj, user_prompt}")
-        
-        if not file_obj:
-            return Response(CustomeReponse.ERROR_FILE_NOT_PROVIDED, status=status.HTTP_400_BAD_REQUEST)
+            paginator = Paginator(data, page_size)
+            try:
+                current_page = paginator.page(page)
+            except Exception as e:
+                return Response({"error": "Invalid page number"}, status=status.HTTP_400_BAD_REQUEST)
 
-        (resp, msg), err = handle_pattern_matching(file_obj, user_prompt)
-        if err is not None:
-            if err == CustomeReponse.ERROR_UNSUPPORTED_FILE:
-                return Response(CustomeReponse.ERROR_UNSUPPORTED_FILE, status=status.HTTP_400_BAD_REQUEST)
-            elif err == CustomeReponse.ERROR_INTERNAL_SERVER:
-                return Response(CustomeReponse.ERROR_INTERNAL_SERVER, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-        return Response(CustomeReponse.success_response(msg, resp), status=status.HTTP_200_OK)
- 
+            df = current_page.object_list
+            
+            resp, err = open_ai_file_pattern_matching(df, user_prompt)
+            if err is not None:
+                if err == CustomeReponse.ERROR_INTERNAL_SERVER:
+                    return Response(CustomeReponse.ERROR_INTERNAL_SERVER, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
+            return Response({"data": resp}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            logger.error(f"Error in PatternMatchingAPI function: {str(e)}")
+            return Response(CustomeReponse.ERROR_INTERNAL_SERVER, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
