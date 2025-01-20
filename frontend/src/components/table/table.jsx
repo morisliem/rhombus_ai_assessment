@@ -1,11 +1,10 @@
 import React from "react";
-import "./table.sass"
 
 
-const Table = ({ array }) => {
+const Table = ({ array, title }) => {
     return (
         <div>
-            <p>Your input data</p>
+            <p>{title}</p>
             <table className="table">
                 <thead>
                     <tr>

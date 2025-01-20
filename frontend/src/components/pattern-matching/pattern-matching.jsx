@@ -3,6 +3,8 @@ import Pagination from "../pagination/pagination"
 import Table from "../table/table";
 import TextArea from "../text-area/text-area";
 import axios from "axios";
+import LoadingSpinner from "../loading-spinner/loading-spinner";
+import Notification from "../notification/notification";
 import "./pattern-matching.sass";
 
 const PatternMatching = () => {
@@ -13,10 +15,19 @@ const PatternMatching = () => {
     const [totalPages, setTotalPages] = useState(0)
     const [currentPage, setCurrentPages] = useState(1)
     const [isLoading, setIsLoading] = useState(false)
+    const [notificationMessage, setNotificationMessage] = useState("")
 
     const [ragexPattern, setRagexPattern] = useState("")
     const [replacementValue, setReplacementValue] = useState("")
     const [updatedTable, setUpdatedTable] = useState([]);
+
+    const showNotification = (message) => {
+        setNotificationMessage(message)
+    }
+
+    const closeNotification = () => {
+        setNotificationMessage("")
+    }
 
     const getFile = async (page) => {
         setIsLoading(true)
@@ -33,10 +44,12 @@ const PatternMatching = () => {
                 }
             }
             else {
-                console.err("Failed to upload data")
+                console.err("Failed to get file content")
+                showNotification("Failed to get file content")
             }
         } catch (error) {
             console.error("error when getting file from backend: ", error)
+            showNotification("Failed to get file content");
         } finally {
             setIsLoading(false)
         }
@@ -45,22 +58,21 @@ const PatternMatching = () => {
 
     const handleUploadFile = async (e) => {
         const uploadedFile = e.target.files[0]
-        setUpdatedTable([])
         if (uploadedFile) {
+            setUserPrompt("")
+            setUpdatedTable([])
+            setIsLoading(true)
 
             const formData = new FormData()
             formData.append("file", uploadedFile)
 
             try {
                 const resp = await axios.post(
-                    `${BACKEND_URL}/upload`,
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data"
-                        }
+                    `${BACKEND_URL}/upload`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
                     }
-                )
+                })
                 if (resp.status === 200) {
                     setArray(resp.data.results)
                     setTotalPages(resp.data.num_pages)
@@ -69,23 +81,27 @@ const PatternMatching = () => {
                     } else {
                         setCurrentPages(resp.data.next - 1)
                     }
-                }
-                else {
+                } else {
                     console.err("Failed to upload data")
+                    showNotification("Failed to upload data");
                 }
-
             } catch (err) {
                 console.log("Error sending file to backend: ", err)
+                showNotification("Failed to upload data");
+            } finally {
+                setIsLoading(false)
             }
         }
         else {
-            alert("Failed to upload file")
+            showNotification("Failed to upload data");
         }
     }
 
     const onPageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
+            setUserPrompt("")
             getFile(page)
+            setUpdatedTable([])
         }
     }
 
@@ -95,6 +111,7 @@ const PatternMatching = () => {
 
     const findMatchingPattern = async (e) => {
         e.preventDefault()
+        setIsLoading(true)
         try {
             const resp = await axios.post(
                 `${BACKEND_URL}/pattern-matching?page=${currentPage}&page_size=${PAGE_SIZE}`,
@@ -113,21 +130,33 @@ const PatternMatching = () => {
                     setUpdatedTable(resp.data.results.table)
                     setReplacementValue(resp.data.results.replacement_value)
                     setRagexPattern(resp.data.results.regex_pattern)
+                } else if (resp.data.results.status === "FAILED") {
+                    setUpdatedTable(resp.data.results.table)
+                    setReplacementValue(resp.data.results.replacement_value)
+                    setRagexPattern(resp.data.results.regex_pattern)
+
+                    showNotification("No pattern matched the prompt");
                 } else {
+                    showNotification("Failed to process the prompt");
                     console.log("invalid response from the server: ", resp)
                 }
             } else {
-                console.err("Failed to find the matched pattern")
+                showNotification("Failed to process the prompt");
             }
 
         } catch (err) {
-            console.error("Error uploading file: ", err)
+            showNotification("Failed to process the prompt");
+            console.error("Failed to process the prompt: ", err)
+        } finally {
+            setIsLoading(false)
         }
     }
 
 
     return (
         <div className="pattern-matching-container">
+            {isLoading && <LoadingSpinner />}
+            {notificationMessage && <Notification message={notificationMessage} onClose={closeNotification} />}
             <div>
                 <h1>PATTERN MATCHING</h1>
                 <p>Please upload a CSV or Excel file that you want to update</p>
@@ -145,35 +174,36 @@ const PatternMatching = () => {
             </div>
 
             {array.length > 0 && (
-                <>
-                    <div >
-
-                        <TextArea
-                            handleUserPrompt={handleUserPrompt}
-                            findMatchingPattern={findMatchingPattern}
-                        />
-                        <div className="tables-container">
-                            <div className="table-wrapper">
-                                <Table array={array} />
-
-                                {updatedTable.length > 0 && (
-                                    <div>
-                                        <Table array={updatedTable} />
-                                    </div>
-                                )}
-                            </div>
+                <div >
+                    <TextArea
+                        handleUserPrompt={handleUserPrompt}
+                        findMatchingPattern={findMatchingPattern}
+                    />
+                    <div className="tables-container">
+                        <div className="table-wrapper">
+                            <Table
+                                array={array}
+                                title={"Input data"}
+                            />
                         </div>
-
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={onPageChange}
-                        />
+                        {updatedTable.length > 0 && (
+                            <div className="table-wrapper">
+                                <Table
+                                    array={updatedTable}
+                                    title={"Updated data"}
+                                />
+                            </div>
+                        )}
                     </div>
-                </>
-            )}
 
-        </div>
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={onPageChange}
+                    />
+                </div>
+            )}
+        </div >
     );
 };
 

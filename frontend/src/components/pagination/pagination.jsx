@@ -5,13 +5,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     return (
         <div className="pagination-container">
             <button
+                disabled={currentPage === 1}
                 onClick={() => onPageChange(currentPage - 1)}
-                disabled={currentPage == 1}
             >Previous</button>
             <span className="page-status">Page {currentPage} of {totalPages}</span>
             <button
-                onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
+                onClick={() => onPageChange(currentPage + 1)}
             >Next</button>
         </div>
     )

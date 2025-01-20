@@ -1,41 +1,50 @@
-// Variables for customization
-$bg-color: #1a202c // Dark gray background
-$text-color: #ffffff // White text
-$hover-color: #63b3ed // Light blue for hover
-$active-color: #3182ce // Darker blue for active links
+$bg-color: #1a202c
+$text-color: #ffffff
+$hover-color: #63b3ed
+$active-color: #3182ce
 
 .navigation-bar-container
     background-color: $bg-color
     color: $text-color
     padding: 1rem
-    position: fixed // Fix navbar at the top
+    position: fixed
     top: 0
     left: 0
     width: 100%
-    z-index: 1000 // Ensure it stays on top of other elements
+    z-index: 1000
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
 
-ul
-    display: flex // Ensure all items are in a row
-    list-style: none // Remove bullet points
-    margin: 0 // Remove default margin
-    padding: 0 // Remove default padding
-    justify-content: center // Center the navbar items
-    gap: 2rem // Add spacing between items
+    display: flex
+    justify-content: space-between
+    align-items: center
 
-a
-    color: $text-color
-    text-decoration: none
-    font-size: 1rem
-    font-weight: 600
-    transition: color 0.3s ease-in-out
+    .left-nav,
+    .right-nav
+        display: flex
+        list-style: none
+        margin: 0
+        padding: 0
+        gap: 2rem
 
-    &:hover
-        color: $hover-color
+    .left-nav
+        margin-left: 1rem
 
-    &.active
-        color: $active-color
-        text-decoration: underline
+    .right-nav
+        margin-right: 3rem
+
+    a
+        color: $text-color
+        text-decoration: none
+        font-size: 1rem
+        font-weight: 600
+        transition: color 0.3s ease-in-out
+
+        &:hover
+            color: $hover-color
+
+        &.active
+            color: $active-color
+            text-decoration: underline
 
 body
-    margin-top: 60px // Adjust based on the navbar height
+    margin-top: 60px
