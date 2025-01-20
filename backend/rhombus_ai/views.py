@@ -92,7 +92,7 @@ class UploadFileAPI(APIView):
 
 
 class PatternMatchingAPI(APIView):
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         logger.info(f"Incoming request to PatternMatchingAPI: {request}")
         try:
             page = request.query_params.get('page', 1)
@@ -117,7 +117,7 @@ class PatternMatchingAPI(APIView):
                 if err == CustomeReponse.ERROR_INTERNAL_SERVER:
                     return Response(CustomeReponse.ERROR_INTERNAL_SERVER, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 
-            return Response({"data": resp}, status=status.HTTP_200_OK)
+            return Response({"results": resp}, status=status.HTTP_200_OK)
 
         except Exception as e:
             logger.error(f"Error in PatternMatchingAPI function: {str(e)}")
