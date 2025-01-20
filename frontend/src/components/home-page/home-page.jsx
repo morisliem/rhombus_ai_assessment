@@ -1,6 +1,10 @@
+import "./home-page.sass"
+
 const HomePage = () => {
     return (
-        <h1> Home Page </h1>
+        <div className="homepage-container">
+            <h1> Home Page </h1>
+        </div>
     )
 }
 
