@@ -45,13 +45,12 @@ def open_ai_file_pattern_matching(dataframe, prompt):
         regex_pattern = filtered_response_lines[1].strip("[r']")
         replacement_value = filtered_response_lines[2].strip("[']")
         updated_table_raw = filtered_response_lines[3]
-        # status = status.strip("'")
-        # regex_pattern = regex_pattern.replace("'", '')
         updated_table_raw = updated_table_raw.replace("'", '"')
 
         updated_table_df = None
         try:
             updated_table_df = pd.read_json(io.StringIO(updated_table_raw), orient='records')
+            updated_table_df = updated_table_df.to_dict(orient='records')
         except ValueError as e:
             logger.error(f"Error converting updated table to DataFrame: {str(e)}")
             return None, CustomeReponse.ERROR_INTERNAL_SERVER
