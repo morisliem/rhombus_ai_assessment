@@ -1,100 +1,123 @@
 import { useState } from "react";
-import * as XLSX from "xlsx";
+import Pagination from "../pagination/pagination"
+import Table from "../table/table";
+import TextArea from "../text-area/text-area";
 import axios from "axios";
 import "./pattern-matching.sass";
 
 const PatternMatching = () => {
+    const PAGE_SIZE = 15
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const [array, setArray] = useState([]);
-    const [updatedTable, setUpdatedTable] = useState([]);
     const [userPrompt, setUserPrompt] = useState("");
-    const [file, setFile] = useState(null);
+    const [totalPages, setTotalPages] = useState(0)
+    const [currentPage, setCurrentPages] = useState(1)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const processFile = (file) => {
-        const reader = new FileReader();
+    const [ragexPattern, setRagexPattern] = useState("")
+    const [replacementValue, setReplacementValue] = useState("")
+    const [updatedTable, setUpdatedTable] = useState([]);
 
-        if (file.type === "text/csv") {
-            reader.onload = function (event) {
-                const text = event.target.result;
-                csvFileToArray(text);
-            };
-            reader.readAsText(file);
-        } else if (
-            file.type ===
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-            file.type === "application/vnd.ms-excel"
-        ) {
-            reader.onload = function (event) {
-                // Reference: https://www.geeksforgeeks.org/npm-xlsx/
-                const data = new Uint8Array(event.target.result);
-                const workbook = XLSX.read(data, { type: "array" });
-                const sheetName = workbook.SheetNames[0];
-                const sheet = workbook.Sheets[sheetName];
-                const json = XLSX.utils.sheet_to_json(sheet);
-                setArray(json);
-            };
-            reader.readAsArrayBuffer(file);
-        } else {
-            alert("Unsupported file type! Please upload a CSV or Excel file.");
+    const getFile = async (page) => {
+        setIsLoading(true)
+        try {
+            const resp = await axios.get(`${BACKEND_URL}/get-file?page=${page}&page_size=${PAGE_SIZE}`)
+            if (resp.status === 200) {
+                setArray(resp.data.results)
+                setTotalPages(resp.data.num_pages)
+
+                if (resp.data.next == undefined) {
+                    setCurrentPages(1)
+                } else {
+                    setCurrentPages(resp.data.next - 1)
+                }
+            }
+            else {
+                console.err("Failed to upload data")
+            }
+        } catch (error) {
+            console.error("error when getting file from backend: ", error)
+        } finally {
+            setIsLoading(false)
         }
-    };
 
-    const csvFileToArray = (string) => {
-        const csvHeader = string.slice(0, string.indexOf("\n")).split(",");
-        const csvRows = string.slice(string.indexOf("\n") + 1).split("\n");
+    }
 
-        const array = csvRows.map((i) => {
-            const values = i.split(",");
-            const obj = csvHeader.reduce((object, header, index) => {
-                object[header] = values[index];
-                return object;
-            }, {});
-            return obj;
-        });
+    const handleUploadFile = async (e) => {
+        const uploadedFile = e.target.files[0]
+        setUpdatedTable([])
+        if (uploadedFile) {
 
-        setArray(array);
-    };
+            const formData = new FormData()
+            formData.append("file", uploadedFile)
+
+            try {
+                const resp = await axios.post(
+                    `${BACKEND_URL}/upload`,
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                    }
+                )
+                if (resp.status === 200) {
+                    setArray(resp.data.results)
+                    setTotalPages(resp.data.num_pages)
+                    if (resp.data.next == undefined) {
+                        setCurrentPages(1)
+                    } else {
+                        setCurrentPages(resp.data.next - 1)
+                    }
+                }
+                else {
+                    console.err("Failed to upload data")
+                }
+
+            } catch (err) {
+                console.log("Error sending file to backend: ", err)
+            }
+        }
+        else {
+            alert("Failed to upload file")
+        }
+    }
+
+    const onPageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            getFile(page)
+        }
+    }
 
     const handleUserPrompt = (e) => {
         setUserPrompt(e.target.value);
     };
 
-    const handleOnChange = (e) => {
-        const uploadedFile = e.target.files[0];
-        if (uploadedFile) {
-            setFile(uploadedFile)
-            processFile(uploadedFile);
-        }
-    };
-
     const findMatchingPattern = async (e) => {
         e.preventDefault()
-
-        const formData = new FormData()
-        formData.append("file", file)
-        formData.append("user_prompt", userPrompt)
-
         try {
-            const response = await axios.post(
-                "http://localhost:8000/api/pattern-matching",
-                formData,
+            const resp = await axios.post(
+                `${BACKEND_URL}/pattern-matching?page=${currentPage}&page_size=${PAGE_SIZE}`,
+                {
+                    user_prompt: userPrompt
+                },
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
+                        "Content-Type": "application/json",
+                    },
                 }
             )
-            if (response.data.response_type === "success" && response.data.data) {
-                const data = response.data.data
-                const updatedData = Object.keys(data[Object.keys(data)[0]]).map((_, index) => {
-                    const row = {}
-                    Object.keys(data).forEach((key) => {
-                        row[key] = data[key][index]
-                    })
-                    return row
-                })
-                setUpdatedTable(updatedData)
+
+            if (resp.status === 200) {
+                if (resp.data.results.status === "SUCCESS") {
+                    setUpdatedTable(resp.data.results.table)
+                    setReplacementValue(resp.data.results.replacement_value)
+                    setRagexPattern(resp.data.results.regex_pattern)
+                } else {
+                    console.log("invalid response from the server: ", resp)
+                }
             } else {
-                console.log("invalid response from the server: ", response)
+                console.err("Failed to find the matched pattern")
             }
 
         } catch (err) {
@@ -102,13 +125,10 @@ const PatternMatching = () => {
         }
     }
 
-    const headerKeys = array.length > 0 ? Object.keys(array[0]) : [];
-    const updatedHeaderKeys =
-        updatedTable.length > 0 ? Object.keys(updatedTable[0]) : [];
 
     return (
         <div className="pattern-matching-container">
-            <div className="table-container">
+            <div>
                 <h1>PATTERN MATCHING</h1>
                 <p>Please upload a CSV or Excel file that you want to update</p>
                 <form>
@@ -119,75 +139,40 @@ const PatternMatching = () => {
                         type="file"
                         id="fileInput"
                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                        onChange={handleOnChange}
+                        onChange={handleUploadFile}
                     />
                 </form>
             </div>
 
             {array.length > 0 && (
                 <>
-                    <div className="textarea-container">
-                        <textarea
-                            type="text"
-                            placeholder="Please describe pattern you want to find"
-                            onChange={handleUserPrompt}
-                        ></textarea>
-                        <button onClick={findMatchingPattern}>Find</button>
-                    </div>
+                    <div >
 
-                    <div className="tables-container">
-                        <div className="table-wrapper">
-                            <p>Your input data</p>
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        {headerKeys.map((key) => (
-                                            <th key={key}>{key}</th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {array.map((item, index) => (
-                                        <tr key={index}>
-                                            {Object.values(item).map(
-                                                (val, i) => (
-                                                    <td key={i}>{val}</td>
-                                                )
-                                            )}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                        <TextArea
+                            handleUserPrompt={handleUserPrompt}
+                            findMatchingPattern={findMatchingPattern}
+                        />
+                        <div className="tables-container">
+                            <div className="table-wrapper">
+                                <Table array={array} />
+
+                                {updatedTable.length > 0 && (
+                                    <div>
+                                        <Table array={updatedTable} />
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
-                        {updatedTable.length > 0 && (
-                            <div className="table-wrapper">
-                                <p>Your updated data</p>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            {updatedHeaderKeys.map((key) => (
-                                                <th key={key}>{key}</th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {updatedTable.map((item, index) => (
-                                            <tr key={index}>
-                                                {Object.values(item).map(
-                                                    (val, i) => (
-                                                        <td key={i}>{val}</td>
-                                                    )
-                                                )}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={onPageChange}
+                        />
                     </div>
                 </>
             )}
+
         </div>
     );
 };
