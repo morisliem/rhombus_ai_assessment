@@ -158,8 +158,8 @@ const PatternMatching = () => {
             {isLoading && <LoadingSpinner />}
             {notificationMessage && <Notification message={notificationMessage} onClose={closeNotification} />}
             <div>
-                <h1>PATTERN MATCHING</h1>
-                <p>Please upload a CSV or Excel file that you want to update</p>
+                <h2>PATTERN MATCHING & REPLACEMENT</h2>
+                <span>Please upload a CSV or Excel file for regex pattern matching and replacement</span>
                 <form>
                     <label htmlFor="fileInput" className="custom-file-label">
                         Attach File
@@ -174,7 +174,7 @@ const PatternMatching = () => {
             </div>
 
             {array.length > 0 && (
-                <div >
+                <div>
                     <TextArea
                         handleUserPrompt={handleUserPrompt}
                         findMatchingPattern={findMatchingPattern}
