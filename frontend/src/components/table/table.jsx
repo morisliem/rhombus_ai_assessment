@@ -1,6 +1,13 @@
 import React from "react";
 
-
+/**
+* Represents a Table component.
+*
+* @component
+* @param {array} props.array - The content of the table
+* @param {title} props.title - The title of the table
+* @returns {React.ReactElement} A table element.
+*/
 const Table = ({ array, title }) => {
     return (
         <div>

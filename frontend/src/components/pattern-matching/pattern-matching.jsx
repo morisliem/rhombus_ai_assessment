@@ -7,6 +7,12 @@ import LoadingSpinner from "../loading-spinner/loading-spinner";
 import Notification from "../notification/notification";
 import "./pattern-matching.sass";
 
+/**
+* Represents a pattern matching component.
+*
+* @component
+* @returns {React.ReactElement} A pattern matching element.
+*/
 const PatternMatching = () => {
     const PAGE_SIZE = 15
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -37,7 +43,7 @@ const PatternMatching = () => {
                 setArray(resp.data.results)
                 setTotalPages(resp.data.num_pages)
 
-                if (resp.data.next == undefined) {
+                if (resp.data.next === undefined) {
                     setCurrentPages(1)
                 } else {
                     setCurrentPages(resp.data.next - 1)
@@ -76,7 +82,7 @@ const PatternMatching = () => {
                 if (resp.status === 200) {
                     setArray(resp.data.results)
                     setTotalPages(resp.data.num_pages)
-                    if (resp.data.next == undefined) {
+                    if (resp.data.next === undefined) {
                         setCurrentPages(1)
                     } else {
                         setCurrentPages(resp.data.next - 1)

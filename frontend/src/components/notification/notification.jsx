@@ -1,7 +1,15 @@
 import { useEffect } from "react";
 import "./notification.sass"
 
-
+/**
+* Represents a Notification component.
+*
+* @component
+* @param {string} props.message - Notification message
+* @param {function} function - Function to handle close notification
+* @param {function} function - Function to handle auto close notification
+* @returns {React.ReactElement} A Notification element.
+*/
 const Notification = ({ message, onClose, autoClose = true }) => {
     useEffect(() => {
         if (autoClose) {
