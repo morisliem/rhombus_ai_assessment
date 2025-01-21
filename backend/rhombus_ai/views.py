@@ -10,6 +10,7 @@ import logging
 import pickle
 from .models import TemporaryData
 import json
+import numpy as np
 
 logger = logging.getLogger("rhombus_ai")
 
@@ -93,6 +94,13 @@ class UploadFileAPI(APIView):
                 df = pd.read_csv(file)
             else:
                 df = pd.read_excel(file)
+
+            df.replace([np.inf, -np.inf], np.nan, inplace=True)
+            df.fillna(value=0, inplace=True)
+
+            invalid_data = df[df.isin([np.nan, np.inf, -np.inf]).any(axis=1)]
+            if not invalid_data.empty:
+                logger.warning(f"Invalid data found: {invalid_data}")
 
             data_blob = pickle.dumps(df)
 
