@@ -37,7 +37,7 @@ def open_ai_file_pattern_matching(dataframe, prompt):
                                               please return the response strictly in this following format 
                                               of even tough the prompt seems unreasonable. Answer must goes inside the square bracket 
                                               ['SUCCESS' if table get updated and 'FAILED' if table is not updated]
-                                              [ragex pattern]
+                                              [regex pattern]
                                               [replacement_value]
                                               [updated_table]"""}
             ]

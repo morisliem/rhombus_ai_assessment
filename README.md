@@ -1,4 +1,4 @@
-# Ragex Pattern Matching and Replacement Web Application
+# Regex Pattern Matching and Replacement Web Application
 
 ## About The Project
 This project involves building a web application using Django and React that allows users to upload CSV or Excel files, identify patterns in text columns using natural language input, and replace matched patterns with specified values. The application uses a Large Language Model (LLM) to interpret natural language inputs, converts them into regex patterns, and performs the necessary replacements on the data.

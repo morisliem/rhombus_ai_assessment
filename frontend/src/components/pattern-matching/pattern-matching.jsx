@@ -25,7 +25,7 @@ const PatternMatching = () => {
     const [resetTrigger, setResetTrigger] = useState(0);
 
     // eslint-disable-next-line
-    const [ragexPattern, setRagexPattern] = useState("")
+    const [regexPattern, setregexPattern] = useState("")
 
     // eslint-disable-next-line
     const [replacementValue, setReplacementValue] = useState("")
@@ -138,11 +138,11 @@ const PatternMatching = () => {
                 if (resp.data.results.status === "SUCCESS") {
                     setUpdatedTable(resp.data.results.table)
                     setReplacementValue(resp.data.results.replacement_value)
-                    setRagexPattern(resp.data.results.regex_pattern)
+                    setregexPattern(resp.data.results.regex_pattern)
                 } else if (resp.data.results.status === "FAILED") {
                     setUpdatedTable(resp.data.results.table)
                     setReplacementValue(resp.data.results.replacement_value)
-                    setRagexPattern(resp.data.results.regex_pattern)
+                    setregexPattern(resp.data.results.regex_pattern)
 
                     showNotification("No pattern matched the prompt");
                 } else {
