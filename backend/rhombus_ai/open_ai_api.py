@@ -4,7 +4,6 @@ import pandas as pd
 from dotenv import load_dotenv
 from openai import OpenAI
 from django.views.decorators.csrf import csrf_exempt
-from .controller import *
 from .custome_response import *
 import logging
 

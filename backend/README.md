@@ -42,8 +42,8 @@ This Django project structure looks like this:<br>
   - **`open_ai_api.py`**: This file handles the third party integration with Open AI API
 
 - **`requirements.txt`**: Lists the Python packages required for your project.
-- **`Dockerfile`**: Dockerfile which provides the instruction to install all the required dependencies of the project
-- **`.env`**: This file consists of all the secret key variable to set up the project. In this case, it's the secret key for database configuration and open_ai api key
+- **`Dockerfile`**: Dockerfile which provides the instruction to install all the required dependencies of the project and run the program
+- **`.env`**: This file consists of all the secret key variable to set up the project. In this case, the secret key for database configuration and open_ai api key
 
 ### Env file setup
 In this project, env file only consists of the following information
@@ -57,4 +57,112 @@ In this project, env file only consists of the following information
 
 Make sure the wording is exatly following the template provided to run the program
 replace '[ . . . ]' with the appropriate value
+
+### API Contract
+##### 1. Upload file [POST]
+
+Request Example:
+```
+curl --location 'http://localhost:8000/api/upload' \
+--form 'file=@"/Users/rajamoris/Downloads/test1.csv"'
+```
+
+Response Example:
+```
+{
+    "msg": "File uploaded successfully",
+    "count": 3,
+    "num_pages": 1,
+    "results": [
+        {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john.doe@example.com"
+        },
+        {
+            "id": 2,
+            "name": "Jane Smith",
+            "email": "jane_smith@domain.com"
+        },
+        {
+            "id": 3,
+            "name": "Alice Brown",
+            "email": "alice.brown@website.org"
+        }
+    ],
+    "next": null
+}
+```
+
+##### 2. Get file content [GET]
+
+Request Example:
+```
+curl --location 'http://localhost:8000/api/get-file?page=2&page_size=5'
+```
+
+Response Example:
+```{
+    "count": 3,
+    "num_pages": 1,
+    "results": [
+        {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john.doe@example.com"
+        },
+        {
+            "id": 2,
+            "name": "Jane Smith",
+            "email": "jane_smith@domain.com"
+        },
+        {
+            "id": 3,
+            "name": "Alice Brown",
+            "email": "alice.brown@website.org"
+        }
+    ],
+    "next": null,
+    "previous": null
+}
+```
+
+##### 3. Pattern matching & replacement [POST]
+
+Request Example:
+```
+curl --location 'http://localhost:8000/api/pattern-matching?page=1&page_size=15' \
+--header 'Content-Type: application/json' \
+--data '{
+    "user_prompt": "find all email address in email field and replace with '\''testing'\''"
+}'
+```
+
+Response Example:
+```
+{
+    "data": {
+        "status": "SUCCESS",
+        "regex_pattern": "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b",
+        "replacement_value": "testing",
+        "table": {
+            "id": [
+                1,
+                2,
+                3
+            ],
+            "name": [
+                "John Doe",
+                "Jane Smith",
+                "Alice Brown"
+            ],
+            "email": [
+                "testing",
+                "testing",
+                "testing"
+            ]
+        }
+    }
+}
+```
 

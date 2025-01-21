@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
 from django.core.paginator import Paginator
-from .controller import *
 from .custome_response import *
 from .open_ai_api import *
 import pandas as pd
