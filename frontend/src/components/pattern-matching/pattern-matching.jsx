@@ -22,6 +22,7 @@ const PatternMatching = () => {
     const [currentPage, setCurrentPages] = useState(1)
     const [isLoading, setIsLoading] = useState(false)
     const [notificationMessage, setNotificationMessage] = useState("")
+    const [resetTrigger, setResetTrigger] = useState(0);
 
     // eslint-disable-next-line
     const [ragexPattern, setRagexPattern] = useState("")
@@ -46,7 +47,7 @@ const PatternMatching = () => {
                 setArray(resp.data.results)
                 setTotalPages(resp.data.num_pages)
 
-                if (resp.data.next === undefined) {
+                if (resp.data.next === null) {
                     setCurrentPages(1)
                 } else {
                     setCurrentPages(resp.data.next - 1)
@@ -62,13 +63,12 @@ const PatternMatching = () => {
         } finally {
             setIsLoading(false)
         }
-
     }
 
     const handleUploadFile = async (e) => {
         const uploadedFile = e.target.files[0]
         if (uploadedFile) {
-            setUserPrompt("")
+            setResetTrigger(prev => prev + 1);
             setUpdatedTable([])
             setIsLoading(true)
 
@@ -85,7 +85,7 @@ const PatternMatching = () => {
                 if (resp.status === 200) {
                     setArray(resp.data.results)
                     setTotalPages(resp.data.num_pages)
-                    if (resp.data.next === undefined) {
+                    if (resp.data.next === null) {
                         setCurrentPages(1)
                     } else {
                         setCurrentPages(resp.data.next - 1)
@@ -185,6 +185,7 @@ const PatternMatching = () => {
             {array.length > 0 && (
                 <div>
                     <TextArea
+                        resetTrigger={resetTrigger}
                         handleUserPrompt={handleUserPrompt}
                         findMatchingPattern={findMatchingPattern}
                     />
