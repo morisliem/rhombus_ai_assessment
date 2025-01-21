@@ -23,7 +23,10 @@ const PatternMatching = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [notificationMessage, setNotificationMessage] = useState("")
 
+    // eslint-disable-next-line
     const [ragexPattern, setRagexPattern] = useState("")
+
+    // eslint-disable-next-line
     const [replacementValue, setReplacementValue] = useState("")
     const [updatedTable, setUpdatedTable] = useState([]);
 
