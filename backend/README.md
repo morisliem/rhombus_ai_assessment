@@ -102,7 +102,8 @@ curl --location 'http://localhost:8000/api/get-file?page=2&page_size=5'
 ```
 
 Response Example:
-```{
+```
+{
     "count": 3,
     "num_pages": 1,
     "results": [

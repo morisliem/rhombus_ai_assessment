@@ -1,3 +1,6 @@
+'''
+Custome Response class to provide comprehensive API response to the client 
+'''
 class CustomeReponse:
     ERROR_FILE_NOT_PROVIDED = {"response_type": "error", "message": "No file provided.", "data": None}
     ERROR_UNSUPPORTED_FILE = {"response_type": "error", "message": "Unsupported file format. Only CSV and Excel files are allowed.", "data": None}
