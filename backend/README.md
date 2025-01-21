@@ -2,7 +2,7 @@
 
 This project demonstrates Django application for pattern matching and replacement. It uses PostgreSQL as the database to temporary store user Excel or CSV file. This server is running in the port 8000
 
-## Project structure
+## 1. Project Structure
 
 This Django project structure looks like this:<br>
 `backend/`<br>
@@ -25,7 +25,7 @@ This Django project structure looks like this:<br>
 `└── .env`<br>
 `└── Dockerfile`<br>
 
-### Key Components
+## 2. Key Components
 
 - **`manage.py`**: A command-line utility that lets you interact with this Django project. You use it to run commands like `runserver`, `migrate`, `makemigrations`, etc.
 
@@ -45,7 +45,7 @@ This Django project structure looks like this:<br>
 - **`Dockerfile`**: Dockerfile which provides the instruction to install all the required dependencies of the project and run the program
 - **`.env`**: This file consists of all the secret key variable to set up the project. In this case, the secret key for database configuration and open_ai api key
 
-### Env file setup
+## 3. Env File Setup
 In this project, env file only consists of the following information
 `POSTGRES_DB=[enter_database]`<br>
 `POSTGRES_USER=[database_user]`<br>
@@ -58,7 +58,7 @@ In this project, env file only consists of the following information
 Make sure the wording is exatly following the template provided to run the program
 replace '[ . . . ]' with the appropriate value
 
-### API Contract
+## 4. API Contract
 ##### 1. Upload file [POST]
 
 Request Example:

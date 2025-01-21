@@ -34,8 +34,8 @@ This is the overview of the project structure
 - Frontend directory contains react application. Detailed information about frontend project can be access [here](./frontend/README.md)
 
 3. Prepare .env file for both backend and frontend
-- Inside the `backend/.env` file, ensure all the environment variables mentioned [here](./backend/README.md#env-file-setup) are included.
-- Inside the `frontend/.env` file, ensure all the environment variables mentioned [here](./frontend/README.md#env-file-setup) are included.
+- Inside the `backend/.env` file, ensure all the environment variables mentioned [here](./backend/README.md#3-env-file-setup) are included.
+- Inside the `frontend/.env` file, ensure all the environment variables mentioned [here](./frontend/README.md#3-env-file-setup) are included.
 
 4. Build and start the containers
 Ensure docker application is running and open a terminal in the root directory (where the `docker-compose.yaml` is located) and run the following command:
@@ -59,4 +59,4 @@ docker-compose down
 Notes:
 - Frontend Dockerfile: Ensure the Dockerfile installs all necessarry dependencies and run the app with `npm start`
 - Backend Dockerfile: Ensure the Dockerfile installs python dependencies, copies code into the containers and uses the django `runserver` command as specified in the `docker-compose.yaml`
-- Backend API contract can be found [here](./backend/README.md#api-contract)
+- Backend API contract can be found [here](./backend/README.md#4-api-contract)

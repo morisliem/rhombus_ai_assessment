@@ -2,7 +2,7 @@
 
 This project demonstrates React application for pattern matching and replacement. It uses simple react, sass for the styling, react-router-dom for the router. This server is running in the port 3000
 
-## Directory Structure
+## 1. Project Structure
 
 `frontend/`<br>
 `├── src/`<br>
@@ -43,7 +43,7 @@ This project demonstrates React application for pattern matching and replacement
 `├── package.json`<br>
 `├── package-lock.json`<br>
 
-### File Overview
+## 2. Key Components
 
 - **`frontend/`**: Root directory for the frontend side of the project.
   - **`src/`**: Entry point for the web application
@@ -61,7 +61,7 @@ This project demonstrates React application for pattern matching and replacement
   - **`Dockerfile`**: Dockerfile which provides the instruction to install all the required dependencies of the project and run the program
   - **`.env`**: This file consists of all the secret key variable to set up the project. In this case, backend based url
 
-### Env file setup
+## 3. Env File Setup
 In this project, env file only consists of the following information
 `REACT_APP_BACKEND_URL=[backend url]`<br>
 
