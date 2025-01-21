@@ -33,11 +33,11 @@ This is the overview of the project structure
 - Backend directory contains django application. Detailed information about backend project can be access [here](./backend/README.md)
 - Frontend directory contains react application. Detailed information about frontend project can be access [here](./frontend/README.md)
 
-3. Prepare .env file for both backend and frontend
+3. Prepare `.env` file for both backend and frontend
 - Inside the `backend/.env` file, ensure all the environment variables mentioned [here](./backend/README.md#3-env-file-setup) are included.
 - Inside the `frontend/.env` file, ensure all the environment variables mentioned [here](./frontend/README.md#3-env-file-setup) are included.
 
-4. Build and start the containers
+4. Build and start the containers <br>
 Ensure docker application is running and open a terminal in the root directory (where the `docker-compose.yaml` is located) and run the following command:
 ```
 docker-compose up --build
@@ -50,7 +50,7 @@ docker-compose up --build
 - Backend: The API can be accessed at `http://localhost:8000`
 - PostgreSQL (database): The database will be available on port `5432`
 
-6. Shutting down the application
+6. Shutting down the application <br>
 To stop the containers, press `Ctrl + C` in the terminal where the application is running. Then, remove the containers with
 ```
 docker-compose down
