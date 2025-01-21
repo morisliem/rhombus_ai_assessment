@@ -1,8 +1,6 @@
-# rhombus_ai_assessment
+# Ragex Pattern Matching and Replacement Web Application
 
 ## About The Project
-Pattern Matching and Data Processing Web Application
-
 This project involves building a web application using Django and React that allows users to upload CSV or Excel files, identify patterns in text columns using natural language input, and replace matched patterns with specified values. The application uses a Large Language Model (LLM) to interpret natural language inputs, converts them into regex patterns, and performs the necessary replacements on the data.
 
 Key Features: <br>
@@ -12,7 +10,7 @@ Key Features: <br>
 
 ## Run this Project
 
-The project is containerized using docker and can be run using docker-compose. Follow the steps below to run the project using the provided `docker-compose.yaml` file.
+The project is containerized using docker and can be run using docker-compose. Docker speeds up the working environment setup and provides a consistent project version and dependencies, which essentially make the development process easier. Follow the steps below to run the project using the provided `docker-compose.yaml` file.
 
 1. Ensure docker and docker compose are installed
 - Docker guide: https://docs.docker.com/get-started/
