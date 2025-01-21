@@ -62,8 +62,8 @@ This project demonstrates React application for pattern matching and replacement
   - **`.env`**: This file consists of all the secret key variable to set up the project. In this case, backend based url
 
 ## 3. Env File Setup
-In this project, env file only consists of the following information
+In this project, env file only consists of the following information <br>
 `REACT_APP_BACKEND_URL=[backend url]`<br>
 
-Make sure the wording is exatly following the template provided to run the program
-replace '[ . . . ]' with the appropriate value
+Make sure the wording is exatly following the template provided to run the program.
+Replace '[ . . . ]' with the appropriate value
