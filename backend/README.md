@@ -46,7 +46,7 @@ This Django project structure looks like this:<br>
 - **`.env`**: This file consists of all the secret key variable to set up the project. In this case, the secret key for database configuration and open_ai api key
 
 ## 3. Env File Setup
-In this project, env file only consists of the following information
+In this project, env file only consists of the following information <br>
 `POSTGRES_DB=[enter_database]`<br>
 `POSTGRES_USER=[database_user]`<br>
 `POSTGRES_PASSWORD=[database_password]`<br>
@@ -55,15 +55,14 @@ In this project, env file only consists of the following information
 `OPEN_AI_KEY=[open_ai_key]`<br>
 `DJANGO_KEY=[django key]`<br>
 
-Make sure the wording is exatly following the template provided to run the program
-replace '[ . . . ]' with the appropriate value
+Make sure the wording is exatly following the template provided to run the program. Replace '[ . . . ]' with the appropriate value
 
 ## 4. API Contract
 ##### 1. Upload file [POST]
 
 Request Example:
 ```
-curl --location 'http://localhost:8000/api/upload' \
+curl 'http://localhost:8000/api/upload' \
 --form 'file=@"/Users/rajamoris/Downloads/test1.csv"'
 ```
 
@@ -98,7 +97,7 @@ Response Example:
 
 Request Example:
 ```
-curl --location 'http://localhost:8000/api/get-file?page=2&page_size=5'
+curl 'http://localhost:8000/api/get-file?page=2&page_size=5'
 ```
 
 Response Example:
@@ -132,7 +131,7 @@ Response Example:
 
 Request Example:
 ```
-curl --location 'http://localhost:8000/api/pattern-matching?page=1&page_size=15' \
+curl 'http://localhost:8000/api/pattern-matching?page=1&page_size=15' \
 --header 'Content-Type: application/json' \
 --data '{
     "user_prompt": "find all email address in email field and replace with '\''testing'\''"
