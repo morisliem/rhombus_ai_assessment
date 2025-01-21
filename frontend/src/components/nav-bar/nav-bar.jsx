@@ -1,6 +1,12 @@
 import "./nav-bar.sass";
 import { Link } from "react-router-dom";
 
+/**
+* Represents a Navigation bar component.
+*
+* @component
+* @returns {React.ReactElement} A navigation bar element.
+*/
 const Navbar = () => {
     return (
         <nav className="navigation-bar-container">
