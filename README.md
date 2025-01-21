@@ -5,10 +5,10 @@ Pattern Matching and Data Processing Web Application
 
 This project involves building a web application using Django and React that allows users to upload CSV or Excel files, identify patterns in text columns using natural language input, and replace matched patterns with specified values. The application uses a Large Language Model (LLM) to interpret natural language inputs, converts them into regex patterns, and performs the necessary replacements on the data.
 
-Key Features:
-	1.	Backend (Django): Handles file processing, data transformations, and API endpoints for natural language to regex conversion.
-	2.	Frontend (React): Provides an intuitive interface for uploading files, specifying patterns and replacements, and displaying updated data in a tabular format.
-	3.	LLM Integration (OpenAI API): Converts user-provided natural language inputs into regex patterns, ensuring flexibility and accuracy for various use cases.
+Key Features: <br>
+	1.	Backend (Django): Handles file processing, data transformations, and API endpoints for natural language to regex conversion. <br>
+	2.	Frontend (React): Provides an intuitive interface for uploading files, specifying patterns and replacements, and displaying updated data in a tabular format. <br>
+	3.	LLM Integration (OpenAI API): Converts user-provided natural language inputs into regex patterns, ensuring flexibility and accuracy for various use cases. <br>
 
 ## Run this Project
 
