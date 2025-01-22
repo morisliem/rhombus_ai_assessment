@@ -1,7 +1,5 @@
-# Pattern matching & Replacement project Backend
-<br>
+# Pattern matching & Replacement project Backend <br>
 Author: rajamoris8@gmail.com
-<br>
 
 This project demonstrates Django application for pattern matching and replacement. It uses PostgreSQL as the database to temporary store user Excel or CSV file. This server is running in the port 8000
 
