@@ -1,4 +1,6 @@
 # Pattern matching & Replacement project frontend
+<br>
+Author: rajamoris8@gmail.com
 
 This project demonstrates React application for pattern matching and replacement. It uses simple react, sass for the styling, react-router-dom for the router. This server is running in the port 3000
 
